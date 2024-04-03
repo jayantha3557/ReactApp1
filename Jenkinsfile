@@ -32,8 +32,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                bat 'npm install -g serve'
-                bat 'serve -s build -l 4005'
+                bat 'npm install -g http-server'
+                bat 'http-server -p 4005 ./build'
             }
         }
     }
