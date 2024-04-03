@@ -32,8 +32,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace 'pm2' with the full path to 'pm2' if it's not in the system PATH
-                bat 'pm2 serve build 4005 --watch'
+                bat 'npm install -g serve'
+                bat 'serve -s build -l 4005'
             }
         }
     }
