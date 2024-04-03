@@ -3,34 +3,43 @@ pipeline {
 
     environment {
         NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
-        PM2_EXECUTABLE = "/path/to/pm2" // Specify the full path to the pm2 executable
     }
 
     stages {
-        stage('node info') {
+        stage('Checkout') {
             steps {
-                sh "npm config ls"
+                checkout scm
             }
         }
-        stage('Install node modules') {
+
+        stage('Install dependencies') {
             steps {
-                sh "npm install"
+                bat 'npm install'
             }
         }
-        stage('Running tests') {
+
+        stage('Run tests') {
             steps {
-                sh "npm test"
+                bat 'npm test'
             }
         }
-        stage('Building app') {
+
+        stage('Build') {
             steps {
-                sh "npm run build"
+                bat 'npm run build'
             }
         }
-        stage('Deploying app') {
+
+        stage('Deploy') {
             steps {
-                sh "${env.PM2_EXECUTABLE} serve build 4005 --watch"
+                bat 'pm2 serve build 4005 --watch'
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
