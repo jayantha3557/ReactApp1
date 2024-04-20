@@ -1,52 +1,38 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout SCM') {
             steps {
                 checkout scm
             }
         }
-        
+
         stage('Install node modules') {
             steps {
-                script {
-                    // Replace 'nohup' with '&' to run the command in the background
-                    // This is a platform-agnostic alternative
-                    sh 'npm install &'
-                }
+                bat 'npm install'
             }
         }
-        
+
         stage('Running tests') {
             steps {
-                script {
-                    // Replace 'nohup' with '&' to run the command in the background
-                    // This is a platform-agnostic alternative
-                    sh 'npm test &'
-                }
+                bat 'npm test'
             }
         }
-        
+
         stage('Building app') {
             steps {
-                script {
-                    // Replace 'nohup' with '&' to run the command in the background
-                    // This is a platform-agnostic alternative
-                    sh 'npm run build &'
-                }
+                bat 'npm run build'
             }
         }
-        
+
         stage('Deploying app') {
+            environment {
+                PATH = "$PATH:C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\HelloWorldPipelineAsCode\\.npm\\_npx\\5f7878ce38f1eb13\\node_modules\\pm2\\bin"
+            }
             steps {
-                script {
-                    // Replace 'nohup' with '&' to run the command in the background
-                    // This is a platform-agnostic alternative
-                    sh 'pm2 start app.js &'
-                }
+                bat 'pm2 serve build 4002 --watch'
             }
         }
     }
 }
-
