@@ -1,38 +1,34 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Install node modules') {
-            steps {
-                bat 'npm install'
-            }
-        }
-
-        stage('Running tests') {
-            steps {
-                bat 'npm test'
-            }
-        }
-
-        stage('Building app') {
-            steps {
-                bat 'npm run build'
-            }
-        }
-
-        stage('Deploying app') {
-            environment {
-                PATH = "$PATH:C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\HelloWorldPipelineAsCode\\.npm\\_npx\\5f7878ce38f1eb13\\node_modules\\pm2\\bin"
-            }
-            steps {
-                bat 'pm2 serve build 4002 --watch'
-            }
-        }
+environment {
+    NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
     }
+  stages {
+      stage ('node info') {
+      steps {
+        sh "npm config ls"
+      }
+    }
+    stage ('Install node modules') {
+      steps {
+        sh "npm install"
+      }
+    }
+    stage('Running tests'){
+      steps {
+        sh "npm test"
+      }
+    }
+    stage('Building app'){
+      steps {
+        sh "npm run build"
+      }
+    }
+    stage('Deploying app') {
+      steps {
+        sh 'pm2 serve build 4005 --watch'
+      }
+    }
+  }
 }
